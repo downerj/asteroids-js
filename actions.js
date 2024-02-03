@@ -1,27 +1,38 @@
+export const KeyReleased = Symbol('KeyReleased');
+export const KeyPressed = Symbol('KeyPressed');
+export const KeyDebounced = Symbol('KeyDebounced'); 
+
 export class PlayerActions {
-  moveForward = false;
-  moveBackward = false;
-  strafeLeft = false;
-  strafeRight = false;
-  rotateCCW = false;
-  rotateCW = false;
+  thrust = KeyReleased;
+  // moveForward = KeyReleased;
+  // moveBackward = KeyReleased;
+  // strafeLeft = KeyReleased;
+  // strafeRight = KeyReleased;
+  rotateCCW = KeyReleased;
+  rotateCW = KeyReleased;
+  fire = KeyReleased;
 
   /**
    * @param {string} key
    */
   pressKey(key) {
+    // if (key == 'w') {
+    //   this.moveForward = KeyPressed;
+    // } else if (key == 's') {
+    //   this.moveBackward = KeyPressed;
+    // } else if (key == 'a') {
+    //   this.strafeLeft = KeyPressed;
+    // } else if (key == 'd') {
+    //   this.strafeRight = KeyPressed;
+    // }
     if (key == 'w') {
-      this.moveForward = true;
-    } else if (key == 's') {
-      this.moveBackward = true;
-    } else if (key == 'a') {
-      this.strafeLeft = true;
-    } else if (key == 'd') {
-      this.strafeRight = true;
+      this.thrust = KeyPressed;
     } else if (key == 'q') {
-      this.rotateCCW = true;
+      this.rotateCCW = KeyPressed;
     } else if (key == 'e') {
-      this.rotateCW = true;
+      this.rotateCW = KeyPressed;
+    } else if (key == ' ') {
+      this.fire = (this.fire === KeyReleased) ? KeyPressed : KeyDebounced;
     }
   }
 
@@ -29,18 +40,23 @@ export class PlayerActions {
    * @param {string} key
    */
   releaseKey(key) {
+    // if (key == 'w') {
+    //   this.moveForward = KeyReleased;
+    // } else if (key == 's') {
+    //   this.moveBackward = KeyReleased;
+    // } else if (key == 'a') {
+    //   this.strafeLeft = KeyReleased;
+    // } else if (key == 'd') {
+    //   this.strafeRight = KeyReleased;
+    // }
     if (key == 'w') {
-      this.moveForward = false;
-    } else if (key == 's') {
-      this.moveBackward = false;
-    } else if (key == 'a') {
-      this.strafeLeft = false;
-    } else if (key == 'd') {
-      this.strafeRight = false;
+      this.thrust = KeyReleased;
     } else if (key == 'q') {
-      this.rotateCCW = false;
+      this.rotateCCW = KeyReleased;
     } else if (key == 'e') {
-      this.rotateCW = false;
+      this.rotateCW = KeyReleased;
+    } else if (key == ' ') {
+      this.fire = KeyReleased;
     }
   }
 }

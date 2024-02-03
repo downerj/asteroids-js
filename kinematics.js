@@ -18,6 +18,30 @@ export class Position {
     this.x += velocity.dx;
     this.y += velocity.dy;
   }
+
+  /**
+   * @param {number} x
+   * @param {number} y
+   */
+  addScalars(x, y) {
+    this.x += x;
+    this.y += y;
+  }
+
+  /**
+   * @param {Position} position
+   */
+  addVector(position) {
+    this.x += position.x;
+    this.y += position.y;
+  }
+  
+  /**
+   * @returns {Position}
+   */
+  clone() {
+    return new Position(this.x, this.y);
+  }
 }
 
 export class Velocity {
@@ -42,6 +66,23 @@ export class Velocity {
   }
 
   /**
+   * @param {number} dx
+   * @param {number} dy
+   */
+  addScalars(dx, dy) {
+    this.dx += dx;
+    this.dy += dy;
+  }
+
+  /**
+   * @param {Velocity} velocity
+   */
+  addVector(velocity) {
+    this.dx += velocity.dx;
+    this.dy += velocity.dy;
+  }
+
+  /**
    * @param {number} amount
    */
   limit(amount) {
@@ -52,6 +93,13 @@ export class Velocity {
       this.dx = newDx;
       this.dy = newDy;
     }
+  }
+  
+  /**
+   * @returns {Velocity}
+   */
+  clone() {
+    return new Velocity(this.dx, this.dy);
   }
 }
 
@@ -66,5 +114,29 @@ export class Acceleration {
   constructor(ddx = 0, ddy = 0) {
     this.ddx = ddx;
     this.ddy = ddy;
+  }
+
+  /**
+   * @param {number} ddx
+   * @param {number} ddy
+   */
+  addScalars(ddx, ddy) {
+    this.ddx += ddx;
+    this.ddy += ddy;
+  }
+
+  /**
+   * @param {Acceleration} acceleration
+   */
+  addVector(acceleration) {
+    this.ddx += acceleration.ddx;
+    this.ddy += acceleration.ddy;
+  }
+
+  /**
+   * @returns {Acceleration}
+   */
+  clone() {
+    return new Acceleration(this.ddx, this.ddy);
   }
 }

@@ -7,6 +7,7 @@ export class Ship {
   #maxSpeed = 1;
   #acceleration = new Acceleration();
   angle = 90;
+  isAlive = true;
 
   get position() {
     return this.#position;
