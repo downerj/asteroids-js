@@ -1,26 +1,13 @@
 import { Bullet } from './bullet.js';
-import { Position, Velocity, Acceleration } from './kinematics.js';
+import { Entity } from './entity.js';
 import { DEG_TO_RAD } from './math.js';
 
-export class Ship {
-  #position = new Position(50, 50);
-  #velocity = new Velocity();
-  #maxSpeed = 1;
-  #acceleration = new Acceleration();
+export class Ship extends Entity {
   angle = 90;
-  isAlive = true;
+  #hp = 1;
 
-  get position() {
-    return this.#position;
-  }
-
-  set position([x, y]) {
-    this.#position.x = x;
-    this.#position.y = y;
-  }
-
-  get velocity() {
-    return this.#velocity;
+  get isAlive() {
+    return this.#hp > 0;
   }
 
   /**
@@ -29,35 +16,8 @@ export class Ship {
   thrust(ddr) {
     const cosA = Math.cos(this.angle * DEG_TO_RAD);
     const sinA = Math.sin(this.angle * DEG_TO_RAD);
-    this.#acceleration.ddx = ddr * cosA;
-    this.#acceleration.ddy = ddr * sinA;
+    this.acceleration.set(ddr * cosA, ddr * sinA);
   }
-
-  /**
-   * @param {number} dr
-   */
-  // moveForward(dr) {
-  //   const rad = this.angle * DEG_TO_RAD;
-  //   const cosA = Math.cos(rad);
-  //   const sinA = Math.sin(rad);
-  //   const dx = dr * cosA;
-  //   const dy = dr * sinA;
-  //   this.position.x += dx;
-  //   this.position.y += dy;
-  // }
-
-  /**
-   * @param {number} dr
-   */
-  // strafeRight(dr) {
-  //   const rad = (this.angle - 90) * DEG_TO_RAD;
-  //   const cosA = Math.cos(rad);
-  //   const sinA = Math.sin(rad);
-  //   const dx = dr * cosA;
-  //   const dy = dr * sinA;
-  //   this.position.x += dx;
-  //   this.position.y += dy;
-  // }
 
   /**
    * @param {number} da
@@ -70,24 +30,18 @@ export class Ship {
    * @returns {Bullet}
    */
   fireBullet() {
-    const position = this.#position.clone();
+    const position = this.position.clone();
     const angle = this.angle;
     const cosA = Math.cos(angle * DEG_TO_RAD);
     const sinA = Math.sin(angle * DEG_TO_RAD);
     const posOffset = 2;
     position.addScalars(posOffset * cosA, posOffset * sinA);
-    const velocity = this.#velocity.clone();
+    const velocity = this.velocity.clone();
     const firepower = 1;
     velocity.addScalars(firepower * cosA, firepower * sinA);
-    return new Bullet(position, velocity);
-  }
-
-  /**
-   *
-   */
-  update() {
-    this.#velocity.applyAcceleration(this.#acceleration);
-    this.#velocity.limit(this.#maxSpeed);
-    this.#position.applyVelocity(this.#velocity);
+    const bullet = new Bullet();
+    bullet.position = position;
+    bullet.velocity = velocity;
+    return bullet;
   }
 }

@@ -4,10 +4,6 @@ export const KeyDebounced = Symbol('KeyDebounced');
 
 export class PlayerActions {
   thrust = KeyReleased;
-  // moveForward = KeyReleased;
-  // moveBackward = KeyReleased;
-  // strafeLeft = KeyReleased;
-  // strafeRight = KeyReleased;
   rotateCCW = KeyReleased;
   rotateCW = KeyReleased;
   fire = KeyReleased;
@@ -16,15 +12,6 @@ export class PlayerActions {
    * @param {string} key
    */
   pressKey(key) {
-    // if (key == 'w') {
-    //   this.moveForward = KeyPressed;
-    // } else if (key == 's') {
-    //   this.moveBackward = KeyPressed;
-    // } else if (key == 'a') {
-    //   this.strafeLeft = KeyPressed;
-    // } else if (key == 'd') {
-    //   this.strafeRight = KeyPressed;
-    // }
     if (key == 'w') {
       this.thrust = KeyPressed;
     } else if (key == 'q') {
@@ -40,15 +27,6 @@ export class PlayerActions {
    * @param {string} key
    */
   releaseKey(key) {
-    // if (key == 'w') {
-    //   this.moveForward = KeyReleased;
-    // } else if (key == 's') {
-    //   this.moveBackward = KeyReleased;
-    // } else if (key == 'a') {
-    //   this.strafeLeft = KeyReleased;
-    // } else if (key == 'd') {
-    //   this.strafeRight = KeyReleased;
-    // }
     if (key == 'w') {
       this.thrust = KeyReleased;
     } else if (key == 'q') {

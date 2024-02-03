@@ -1,11 +1,8 @@
 import { BoundingBox } from "./boundingbox.js";
 import { Bullet } from "./bullet.js";
+import { Entity } from "./entity.js";
 import { DEG_TO_RAD } from "./math.js";
 import { Ship } from "./ship.js";
-
-/**
- * @typedef {{position: Position}} Entity
- */
 
 export class Renderer {
   /**
@@ -30,20 +27,6 @@ export class Renderer {
   addEntity(entity) {
     this.#entities.push(entity);
   }
-
-  /**
-   * @param {Entity} entity
-   * @returns {boolean}
-   */
-  // removeEntity(entity) {
-  //   for (let e = 0; e < this.#entities.length; ++e) {
-  //     if (entity === this.#entities[e]) {
-  //       this.#entities.splice(e, 1);
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
 
   /**
    *

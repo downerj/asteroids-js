@@ -1,14 +1,9 @@
 import { KeyDebounced, KeyPressed, PlayerActions } from './actions.js';
 import { BoundingBox } from './boundingbox.js';
 import { Bullet } from './bullet.js';
-import { Position } from './kinematics.js';
-import { DEG_TO_RAD } from './math.js';
+import { Entity } from "./entity.js";
 import { Renderer } from './render.js'
 import { Ship } from './ship.js';
-
-/**
- * @typedef {{position: Position}} Entity
- */
 
 export class Game {
   ship = new Ship();
@@ -27,8 +22,7 @@ export class Game {
    * @param {CanvasRenderingContext2D} ctx
    */
   constructor(ctx) {
-    this.ship.position.x = 0;
-    this.ship.position.y = 0;
+    this.ship.maxSpeed = 1;
     this.renderer = new Renderer(ctx, this.bounds);
     this.renderer.addEntity(this.ship);
   }
@@ -58,18 +52,6 @@ export class Game {
     } else {
       this.ship.thrust(0);
     }
-
-    // if (this.actions.moveForward) {
-    //   this.ship.moveForward(this.playerStrafeSpeed);
-    // } else if (this.actions.moveBackward) {
-    //   this.ship.moveForward(-this.playerStrafeSpeed);
-    // }
-
-    // if (this.actions.strafeLeft) {
-    //   this.ship.strafeRight(-this.playerStrafeSpeed);
-    // } else if (this.actions.strafeRight) {
-    //   this.ship.strafeRight(this.playerStrafeSpeed);
-    // }
 
     if (this.actions.rotateCCW === KeyPressed) {
       this.ship.rotateCCW(this.playerRotateSpeed);

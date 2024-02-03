@@ -12,6 +12,15 @@ export class Position {
   }
 
   /**
+   * @param {number} x
+   * @param {number} y
+   */
+  set(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
    * @param {Velocity} velocity
    */
   applyVelocity(velocity) {
@@ -53,6 +62,15 @@ export class Velocity {
    * @param {number} dy
    */
   constructor(dx = 0, dy = 0) {
+    this.dx = dx;
+    this.dy = dy;
+  }
+
+  /**
+   * @param {number} dx
+   * @param {number} dy
+   */
+  set(dx, dy) {
     this.dx = dx;
     this.dy = dy;
   }
@@ -112,6 +130,15 @@ export class Acceleration {
    * @param {number} ddy
    */
   constructor(ddx = 0, ddy = 0) {
+    this.ddx = ddx;
+    this.ddy = ddy;
+  }
+
+  /**
+   * @param {number} ddx
+   * @param {number} ddy
+   */
+  set(ddx, ddy) {
     this.ddx = ddx;
     this.ddy = ddy;
   }
