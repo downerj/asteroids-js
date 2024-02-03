@@ -32,7 +32,21 @@ window.addEventListener('load', () => {
   const resize = () => {
     cvs.width = cvs.parentElement.clientWidth;
     cvs.height = cvs.parentElement.clientHeight;
-    ctx.transform(cvs.width/game.worldWidth, 0, 0, -cvs.height/game.worldHeight, 0, cvs.height);
+    const {left, bottom, right, top} = game.bounds;
+    const worldWidth = right - left;
+    const worldHeight = top - bottom;
+    // x' = a*x + c*y + e
+    // y' = b*x + d*y + f
+    // [ a c e
+    //   b d f
+    //   0 0 1 ]
+    const a = cvs.width/worldWidth;
+    const b = 0;
+    const c = 0;
+    const d = -cvs.height/worldHeight;
+    const e = -cvs.width * left / worldWidth;
+    const f = cvs.height * right / worldHeight;
+    ctx.transform(a, b, c, d, e, f);
   };
   resize();
   window.addEventListener('resize', () => {

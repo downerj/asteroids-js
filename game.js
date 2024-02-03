@@ -1,4 +1,5 @@
 import { PlayerActions } from './actions.js';
+import { BoundingBox } from './boundingbox.js';
 import { Position } from './kinematics.js';
 import { Ship } from './ship.js';
 
@@ -7,39 +8,34 @@ import { Ship } from './ship.js';
  */
 
 export class Game {
-  worldWidth = 100;
-  worldHeight = 100;
   ship = new Ship();
   actions = new PlayerActions();
   playerStrafeSpeed = 1;
   playerRotateSpeed = 5;
   playerThrust = .05;
+  bounds = new BoundingBox(-50, -50, 50, 50);
 
   /**
    *
    */
   constructor() {
-    this.ship.x = 50;
-    this.ship.y = 50;
+    this.ship.position.x = 0;
+    this.ship.position.y = 0;
   }
 
   /**
    * @param {Entity} entity
    */
-  wrapToroidal(entity) {
-    if (entity.position.x > this.worldWidth) {
-      entity.position.x = 0;
-      entity.position.y = this.worldHeight - entity.position.y;
-    } else if (entity.position.x < 0) {
-      entity.position.x = this.worldWidth;
-      entity.position.y = this.worldHeight - entity.position.y;
+  wrap(entity) {
+    if (entity.position.x > this.bounds.right) {
+      entity.position.x = this.bounds.left;
+    } else if (entity.position.x < this.bounds.left) {
+      entity.position.x = this.bounds.right;
     }
-    if (entity.position.y > this.worldHeight) {
-      entity.position.y = 0;
-      entity.position.x = this.worldWidth - entity.position.x;
-    } else if (entity.position.y < 0) {
-      entity.position.y = this.worldHeight;
-      entity.position.x = this.worldWidth - entity.position.x;
+    if (entity.position.y > this.bounds.top) {
+      entity.position.y = this.bounds.bottom;
+    } else if (entity.position.y < this.bounds.bottom) {
+      entity.position.y = this.bounds.top;
     }
   }
 
@@ -72,14 +68,15 @@ export class Game {
     }
 
     this.ship.update();
-    this.wrapToroidal(this.ship);
+    this.wrap(this.ship);
   }
 
   /**
    * @param {CanvasRenderingContext2D} ctx
    */
   draw(ctx) {
-    ctx.clearRect(0, 0, this.worldWidth, this.worldHeight);
+    const {left, bottom, right, top, width, height} = this.bounds;
+    ctx.clearRect(left, bottom, width, height);
     this.ship.draw(ctx);
   }
 }
