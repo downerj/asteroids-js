@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: calc(100% - 10px);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background-color: black;
+}
+
+/*
+ * https://stackoverflow.com/questions/69226967/css-responsive-box-that-maintains-aspect-ratio-but-never-overflows-the-viewport
+ */
+div.drawing-area {
+  display: inline-block;
+  position: fixed;
+  --ratio: calc(1/1);
+  --h: min(calc(100vw / var(--ratio)), 100vh);
+  --w: calc(var(--h) * var(--ratio));
+  height: var(--h);
+  width: var(--w);
+  left: calc(50% - var(--w)/2);
+  top: calc(50% - var(--h)/2);
+  border: 1px solid white;
+}
