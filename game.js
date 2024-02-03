@@ -1,6 +1,7 @@
 import { PlayerActions } from './actions.js';
 import { BoundingBox } from './boundingbox.js';
 import { Position } from './kinematics.js';
+import { Renderer } from './render.js'
 import { Ship } from './ship.js';
 
 /**
@@ -14,13 +15,16 @@ export class Game {
   playerRotateSpeed = 5;
   playerThrust = .05;
   bounds = new BoundingBox(-50, -50, 50, 50);
+  renderer;
 
   /**
-   *
+   * @param {CanvasRenderingContext2D} ctx
    */
-  constructor() {
+  constructor(ctx) {
     this.ship.position.x = 0;
     this.ship.position.y = 0;
+    this.renderer = new Renderer(ctx, this.bounds);
+    this.renderer.addEntity(this.ship);
   }
 
   /**
@@ -69,14 +73,7 @@ export class Game {
 
     this.ship.update();
     this.wrap(this.ship);
-  }
 
-  /**
-   * @param {CanvasRenderingContext2D} ctx
-   */
-  draw(ctx) {
-    const {left, bottom, right, top, width, height} = this.bounds;
-    ctx.clearRect(left, bottom, width, height);
-    this.ship.draw(ctx);
+    this.renderer.render();
   }
 }

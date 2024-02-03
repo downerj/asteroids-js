@@ -25,7 +25,7 @@ window.addEventListener('load', () => {
    * @type {CanvasRenderingContext2D}
    */
   const ctx = cvs.getContext('2d');
-  const game = new Game();
+  const game = new Game(ctx);
   /**
    *
    */
@@ -60,6 +60,5 @@ window.addEventListener('load', () => {
   });
   loopOnInterval(() => {
     game.update();
-    game.draw(ctx);
   }, 10);
 });

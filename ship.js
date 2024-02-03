@@ -1,6 +1,5 @@
 import { Position, Velocity, Acceleration } from './kinematics.js';
-
-const DEG_TO_RAD = Math.PI / 180;
+import { DEG_TO_RAD } from './math.js';
 
 export class Ship {
   #position = new Position(50, 50);
@@ -72,26 +71,5 @@ export class Ship {
     this.#velocity.applyAcceleration(this.#acceleration);
     this.#velocity.limit(this.#maxSpeed);
     this.#position.applyVelocity(this.#velocity);
-  }
-
-  /**
-   * @param {CanvasRenderingContext2D} ctx
-   */
-  draw(ctx) {
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = .25;
-    const oldTransform = ctx.getTransform();
-    ctx.translate(this.position.x, this.position.y);
-    ctx.rotate(this.angle * DEG_TO_RAD);
-    ctx.beginPath();
-    {
-      ctx.moveTo(-1, 1);
-      ctx.lineTo(1, 0);
-      ctx.lineTo(-1, -1);
-      ctx.lineTo(-.5, 0);
-      ctx.closePath();
-    }
-    ctx.stroke();
-    ctx.setTransform(oldTransform);
   }
 }
