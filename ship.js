@@ -1,3 +1,4 @@
+import { Bullet } from './bullet.js';
 import { Position, Velocity, Acceleration } from './kinematics.js';
 import { DEG_TO_RAD } from './math.js';
 
@@ -63,6 +64,22 @@ export class Ship {
    */
   rotateCCW(da) {
     this.angle += da;
+  }
+
+  /**
+   * @returns {Bullet}
+   */
+  fireBullet() {
+    const position = this.#position.clone();
+    const angle = this.angle;
+    const cosA = Math.cos(angle * DEG_TO_RAD);
+    const sinA = Math.sin(angle * DEG_TO_RAD);
+    const posOffset = 2;
+    position.addScalars(posOffset * cosA, posOffset * sinA);
+    const velocity = this.#velocity.clone();
+    const firepower = 1;
+    velocity.addScalars(firepower * cosA, firepower * sinA);
+    return new Bullet(position, velocity);
   }
 
   /**

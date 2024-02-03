@@ -90,16 +90,8 @@ export class Game {
 
     if (this.actions.fire === KeyPressed) {
       this.actions.fire = KeyDebounced;
-      const position = this.ship.position.clone();
-      const angle = this.ship.angle;
-      const cosA = Math.cos(angle * DEG_TO_RAD);
-      const sinA = Math.sin(angle * DEG_TO_RAD);
-      const posOffset = 2;
-      position.addScalars(posOffset * cosA, posOffset * sinA);
-      const velocity = this.ship.velocity.clone();
-      const firepower = 1;
-      velocity.addScalars(firepower * cosA, firepower * sinA);
-      const bullet = new Bullet(position, velocity);
+      const bullet = this.ship.fireBullet();
+      this.wrap(bullet);
       this.bullets.push(bullet);
       this.renderer.addEntity(bullet);
     }
