@@ -36,7 +36,7 @@ export class Game {
   /**
    * @param {Entity} entity
    */
-  wrap(entity) {
+  wrapAroundBoundary(entity) {
     if (entity.position.x > this.bounds.right) {
       entity.position.x = this.bounds.left;
     } else if (entity.position.x < this.bounds.left) {
@@ -85,19 +85,19 @@ export class Game {
         continue;
       }
       bullet.update();
-      this.wrap(bullet);
+      this.wrapAroundBoundary(bullet);
     }
 
     if (this.actions.fire === KeyPressed) {
       this.actions.fire = KeyDebounced;
       const bullet = this.ship.fireBullet();
-      this.wrap(bullet);
+      this.wrapAroundBoundary(bullet);
       this.bullets.push(bullet);
       this.renderer.addEntity(bullet);
     }
 
     this.ship.update();
-    this.wrap(this.ship);
+    this.wrapAroundBoundary(this.ship);
 
     this.renderer.render();
   }
