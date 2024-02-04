@@ -156,6 +156,15 @@ export class Game {
         this.ship.destroy();
         this.timeToRespawn = Game.#MaxTimeToRespawn;
       }
+
+      for (let b = 0; b < this.bullets.length; ++b) {
+        const bullet = this.bullets[b];
+        if (bullet.isAlive && bullet.detectCollision(asteroid)) {
+          asteroid.destroy();
+          bullet.destroy();
+          break;
+        }
+      }
     }
 
     this.renderer.render();

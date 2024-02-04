@@ -20,6 +20,13 @@ export class Bullet extends Entity {
   /**
    *
    */
+  destroy() {
+    this.#life = 0;
+  }
+
+  /**
+   *
+   */
   update() {
     super.update();
     if (this.isAlive) {
