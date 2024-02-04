@@ -5,6 +5,11 @@ export class Bullet extends Entity {
   static MaxLife = 100;
   #life = Bullet.MaxLife;
 
+  constructor() {
+    super();
+    this.boundingBox.set(-.5, -.5, .5, .5);
+  }
+
   /**
    * @returns {boolean}
    */

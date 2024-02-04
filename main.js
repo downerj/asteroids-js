@@ -26,6 +26,7 @@ window.addEventListener('load', () => {
    */
   const ctx = cvs.getContext('2d');
   const game = new Game(ctx);
+  window.game = game;
   /**
    *
    */

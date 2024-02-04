@@ -4,10 +4,35 @@ import { DEG_TO_RAD } from './math.js';
 
 export class Ship extends Entity {
   angle = 90;
-  #hp = 1;
+  #isAlive = true;
 
+  /**
+   *
+   */
+  constructor() {
+    super();
+    this.boundingBox.set(-1, -1, 1, 1);
+  }
+
+  /**
+   * @returns {boolean}
+   */
   get isAlive() {
-    return this.#hp > 0;
+    return this.#isAlive;
+  }
+
+  /**
+   *
+   */
+  destroy() {
+    this.#isAlive = false;
+  }
+  
+  /**
+   *
+   */
+  respawn() {
+    this.#isAlive = true;
   }
 
   /**

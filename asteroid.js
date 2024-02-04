@@ -5,6 +5,11 @@ export class Asteroid extends Entity {
   angle = 0;
   #isAlive = true;
 
+  constructor() {
+    super();
+    this.boundingBox.set(-5, -5, 5, 5);
+  }
+
   /**
    * @returns {boolean}
    */

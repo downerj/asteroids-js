@@ -23,12 +23,14 @@ export class Game {
    * @type {Asteroid[]}
    */
   asteroids = [];
+  static #MaxTimeToRespawn = 100;
+  timeToRespawn = -1;
 
   /**
    * @param {CanvasRenderingContext2D} ctx
    */
   constructor(ctx) {
-    this.ship.maxSpeed = 1;
+    this.#initializeShip();
     this.renderer = new Renderer(ctx, this.bounds);
     this.renderer.addEntity(this.ship);
     for (let a = 0; a < 7; ++a) {
@@ -36,6 +38,17 @@ export class Game {
       this.asteroids.push(asteroid);
       this.renderer.addEntity(asteroid);
     }
+  }
+
+  /**
+   *
+   */
+  #initializeShip() {
+    this.ship.maxSpeed = 1;
+    this.ship.position.set(0, 0);
+    this.ship.velocity.set(0, 0);
+    this.ship.acceleration.set(0, 0);
+    this.ship.angle = 90;
   }
 
   /**
@@ -85,15 +98,13 @@ export class Game {
    *
    */
   update() {
-    for (let a = 0; a < this.asteroids.length; ++a) {
-      const asteroid = this.asteroids[a];
-      if (!asteroid.isAlive) {
-        this.asteroids.splice(a, 1);
-        --a;
-        continue;
-      }
-      asteroid.update();
-      this.wrapAroundBoundary(asteroid);
+    if (this.timeToRespawn > 0) {
+      --this.timeToRespawn;
+    } else if (this.timeToRespawn === 0) {
+      this.ship.respawn();
+      this.#initializeShip();
+      this.renderer.addEntity(this.ship);
+      --this.timeToRespawn;
     }
 
     if (this.actions.thrust === KeyPressed) {
@@ -101,6 +112,9 @@ export class Game {
     } else {
       this.ship.thrust(0);
     }
+
+    this.ship.update();
+    this.wrapAroundBoundary(this.ship);
 
     if (this.actions.rotateCCW === KeyPressed) {
       this.ship.rotateCCW(this.playerRotateSpeed);
@@ -127,8 +141,22 @@ export class Game {
       this.renderer.addEntity(bullet);
     }
 
-    this.ship.update();
-    this.wrapAroundBoundary(this.ship);
+    for (let a = 0; a < this.asteroids.length; ++a) {
+      const asteroid = this.asteroids[a];
+      if (!asteroid.isAlive) {
+        this.asteroids.splice(a, 1);
+        --a;
+        continue;
+      }
+      asteroid.update();
+      this.wrapAroundBoundary(asteroid);
+
+      if (this.ship.isAlive && this.ship.detectCollision(asteroid)) {
+        console.log('Collision with asteroid!');
+        this.ship.destroy();
+        this.timeToRespawn = Game.#MaxTimeToRespawn;
+      }
+    }
 
     this.renderer.render();
   }
