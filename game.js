@@ -1,7 +1,9 @@
 import { KeyDebounced, KeyPressed, PlayerActions } from './actions.js';
+import { Asteroid } from './asteroid.js';
 import { BoundingBox } from './boundingbox.js';
 import { Bullet } from './bullet.js';
 import { Entity } from "./entity.js";
+import { randomInteger } from './math.js';
 import { Renderer } from './render.js'
 import { Ship } from './ship.js';
 
@@ -17,6 +19,10 @@ export class Game {
    * @type {Bullet[]}
    */
   bullets = [];
+  /**
+   * @type {Asteroid[]}
+   */
+  asteroids = [];
 
   /**
    * @param {CanvasRenderingContext2D} ctx
@@ -25,6 +31,38 @@ export class Game {
     this.ship.maxSpeed = 1;
     this.renderer = new Renderer(ctx, this.bounds);
     this.renderer.addEntity(this.ship);
+    for (let a = 0; a < 7; ++a) {
+      const asteroid = this.spawnAsteroid();
+      this.asteroids.push(asteroid);
+      this.renderer.addEntity(asteroid);
+    }
+  }
+
+  /**
+   * @returns {Asteroid}
+   */
+  spawnAsteroid() {
+    // Edge 1: Left
+    // Edge 2: Bottom
+    // Edge 3: Right
+    // Edge 4: Top
+    const edge = randomInteger(1, 4);
+    const x = edge === 1 ? this.bounds.left
+      : edge === 3 ? this.bounds.right
+      : randomInteger(this.bounds.left, this.bounds.right);
+    const y = edge === 2 ? this.bounds.bottom
+      : edge === 4 ? this.bounds.top
+      : randomInteger(this.bounds.bottom, this.bounds.top);
+    const dxDir = randomInteger(0, 1);
+    const dyDir = randomInteger(0, 1);
+    const dx = (dxDir ? 1 : -1) * randomInteger(1, 2) / 10;
+    const dy = (dyDir ? 1 : -1) * randomInteger(1, 2) / 10;
+    const da = randomInteger(-5, 5);
+    const asteroid = new Asteroid();
+    asteroid.position.set(x, y);
+    asteroid.velocity.set(dx, dy);
+    asteroid.angularSpeed = da;
+    return asteroid;
   }
 
   /**
@@ -47,6 +85,17 @@ export class Game {
    *
    */
   update() {
+    for (let a = 0; a < this.asteroids.length; ++a) {
+      const asteroid = this.asteroids[a];
+      if (!asteroid.isAlive) {
+        this.asteroids.splice(a, 1);
+        --a;
+        continue;
+      }
+      asteroid.update();
+      this.wrapAroundBoundary(asteroid);
+    }
+
     if (this.actions.thrust === KeyPressed) {
       this.ship.thrust(this.playerThrust);
     } else {

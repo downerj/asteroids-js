@@ -1,3 +1,4 @@
+import { Asteroid } from "./asteroid.js";
 import { BoundingBox } from "./boundingbox.js";
 import { Bullet } from "./bullet.js";
 import { Entity } from "./entity.js";
@@ -46,18 +47,20 @@ export class Renderer {
       ctx.translate(entity.position.x, entity.position.y);
       ctx.rotate(entity.angle * DEG_TO_RAD);
       if (entity instanceof Ship) {
-        this.#drawShip(entity);
+        this.#drawShip();
       } else if (entity instanceof Bullet) {
-        this.#drawBullet(entity);
+        this.#drawBullet();
+      } else if (entity instanceof Asteroid) {
+        this.#drawAsteroid();
       }
       ctx.setTransform(oldTransform);
     }
   }
 
   /**
-   * @param {Ship} ship
+   *
    */
-  #drawShip(ship) {
+  #drawShip() {
     const ctx = this.#ctx;
     ctx.beginPath();
     {
@@ -73,15 +76,37 @@ export class Renderer {
   }
 
   /**
-   * @param {Bullet} bullet
+   *
    */
-  #drawBullet(bullet) {
+  #drawBullet() {
     const ctx = this.#ctx;
     ctx.beginPath();
     {
       ctx.arc(0, 0, .5, 0, Math.PI * 2);
     }
     ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = .25;
+    ctx.stroke();
+  }
+
+  /**
+   *
+   */
+  #drawAsteroid() {
+    const ctx = this.#ctx;
+    ctx.beginPath();
+    {
+      ctx.moveTo(5, 0);
+      ctx.lineTo(.5, -2.5);
+      ctx.lineTo(0, -5);
+      ctx.lineTo(-2, -2.5);
+      ctx.lineTo(-5, 0);
+      ctx.lineTo(-2, 2);
+      ctx.lineTo(0, 5);
+      ctx.lineTo(5, 2.5);
+      ctx.closePath();
+    }
+    ctx.strokeStyle = '#ffff00';
     ctx.lineWidth = .25;
     ctx.stroke();
   }
