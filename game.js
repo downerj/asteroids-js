@@ -25,19 +25,16 @@ export class Game {
   asteroids = [];
   static #MaxTimeToRespawn = 100;
   timeToRespawn = -1;
+  static #MaxTimeToNextLevel = 200;
+  timeToNextLevel = -1;
 
   /**
    * @param {CanvasRenderingContext2D} ctx
    */
   constructor(ctx) {
-    this.#initializeShip();
     this.renderer = new Renderer(ctx, this.bounds);
-    this.renderer.addEntity(this.ship);
-    for (let a = 0; a < 7; ++a) {
-      const asteroid = this.spawnAsteroid();
-      this.asteroids.push(asteroid);
-      this.renderer.addEntity(asteroid);
-    }
+    this.#initializeShip();
+    this.#initializeAsteroids();
   }
 
   /**
@@ -49,6 +46,18 @@ export class Game {
     this.ship.velocity.set(0, 0);
     this.ship.acceleration.set(0, 0);
     this.ship.angle = 90;
+    this.renderer.addEntity(this.ship);
+  }
+
+  /**
+   *
+   */
+  #initializeAsteroids() {
+    for (let a = 0; a < 7; ++a) {
+      const asteroid = this.spawnAsteroid();
+      this.asteroids.push(asteroid);
+      this.renderer.addEntity(asteroid);
+    }
   }
 
   /**
@@ -103,7 +112,6 @@ export class Game {
     } else if (this.timeToRespawn === 0) {
       this.ship.respawn();
       this.#initializeShip();
-      this.renderer.addEntity(this.ship);
       --this.timeToRespawn;
     }
 
@@ -134,11 +142,20 @@ export class Game {
     }
 
     if (this.actions.fire === KeyPressed) {
-      this.actions.fire = KeyDebounced;
-      const bullet = this.ship.fireBullet();
-      this.wrapAroundBoundary(bullet);
-      this.bullets.push(bullet);
-      this.renderer.addEntity(bullet);
+      if (this.ship.isAlive) {
+        this.actions.fire = KeyDebounced;
+        const bullet = this.ship.fireBullet();
+        this.wrapAroundBoundary(bullet);
+        this.bullets.push(bullet);
+        this.renderer.addEntity(bullet);
+      }
+    }
+
+    if (this.timeToNextLevel > 0) {
+      --this.timeToNextLevel;
+    } else if (this.timeToNextLevel === 0) {
+      this.#initializeAsteroids();
+      --this.timeToNextLevel;
     }
 
     for (let a = 0; a < this.asteroids.length; ++a) {
@@ -152,7 +169,6 @@ export class Game {
       this.wrapAroundBoundary(asteroid);
 
       if (this.ship.isAlive && this.ship.detectCollision(asteroid)) {
-        console.log('Collision with asteroid!');
         this.ship.destroy();
         this.timeToRespawn = Game.#MaxTimeToRespawn;
       }
@@ -165,6 +181,9 @@ export class Game {
           break;
         }
       }
+    }
+    if (this.asteroids.length === 0 && this.timeToNextLevel < 0) {
+      this.timeToNextLevel = Game.#MaxTimeToNextLevel;
     }
 
     this.renderer.render();
